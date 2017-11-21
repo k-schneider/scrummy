@@ -2,10 +2,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { EffectsModule } from '@ngrx/effects';
+import { RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { metaReducers, reducers } from './core/store';
+import { CustomRouterStateSerializer } from './core/store/router';
 import { LayoutsModule, RootComponent } from './layouts';
 import { AppRoutingModule } from './app-routing.module';
 
@@ -18,10 +20,13 @@ import { AppRoutingModule } from './app-routing.module';
     StoreDevtoolsModule.instrument({
       maxAge: 25
     }),
-    // EffectsModule.forRoot([]),
+    StoreRouterConnectingModule,
+    EffectsModule.forRoot([]),
     LayoutsModule
   ],
-  providers: [],
+  providers: [
+    { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer }
+  ],
   bootstrap: [RootComponent]
 })
 export class AppModule { }

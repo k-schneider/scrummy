@@ -1,3 +1,4 @@
+import { RouterReducerState } from '@ngrx/router-store';
 import { ActionReducerMap, createSelector } from '@ngrx/store';
 import { environment } from '../../../environments/environment';
 
@@ -8,6 +9,7 @@ import { environment } from '../../../environments/environment';
  * notation packages up all of the exports into a single object.
  */
 import * as fromCounter from './counter';
+import * as fromRouter from './router';
 
 /**
  * As mentioned, we treat each reducer like a table in a database. This means
@@ -15,6 +17,7 @@ import * as fromCounter from './counter';
  */
 export interface State {
   counter: fromCounter.State;
+  routerReducer: RouterReducerState<fromRouter.State>;
 }
 
 /**
@@ -22,7 +25,8 @@ export interface State {
  * based on targetted environment.
  */
 export const reducers: ActionReducerMap<State>  = {
-  counter: fromCounter.reducer
+  counter: fromCounter.reducer,
+  routerReducer: fromRouter.reducer
 };
 
 const metaReducersDev = [];
