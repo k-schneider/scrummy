@@ -1,5 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
+import { EffectsModule } from '@ngrx/effects';
+
+import { PokerRoomEffects } from '../core/store/poker-room';
 
 import {
   RoomPageComponent,
@@ -23,7 +28,11 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    EffectsModule.forFeature([PokerRoomEffects])
+  ],
   exports: [RouterModule]
 })
 export class PokerRoutingModule { }

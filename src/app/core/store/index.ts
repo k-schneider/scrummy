@@ -9,6 +9,7 @@ import { environment } from '../../../environments/environment';
  * notation packages up all of the exports into a single object.
  */
 import * as fromCounter from './counter';
+import * as fromPokerRoom from './poker-room';
 import * as fromRouter from './router';
 
 /**
@@ -17,6 +18,7 @@ import * as fromRouter from './router';
  */
 export interface State {
   counter: fromCounter.State;
+  pokerRoom: fromPokerRoom.State;
   routerReducer: RouterReducerState<fromRouter.State>;
 }
 
@@ -26,6 +28,7 @@ export interface State {
  */
 export const reducers: ActionReducerMap<State>  = {
   counter: fromCounter.reducer,
+  pokerRoom: fromPokerRoom.reducer,
   routerReducer: fromRouter.reducer
 };
 
@@ -53,3 +56,7 @@ export const metaReducers = environment.production
  */
 export const getCounterState = (state: State) => state.counter;
 export const getCounterValue = createSelector(getCounterState, fromCounter.getValue);
+
+/**
+ * Poker Room Selectors
+ */

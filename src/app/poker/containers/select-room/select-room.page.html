@@ -7,3 +7,16 @@ Counter: {{ counter$ | async }}<br>
 <button type="button" (click)="onIncrement()">Increment (+)</button>
 <button type="button" (click)="onDecrement()">Decrement (-)</button>
 <button type="button" (click)="onReset()">Reset to Zero</button>
+
+<hr>
+
+<div *ngFor="let room of pokerRooms$ | async">
+
+  <h4>Room: [{{ room.id }}] {{ room.name }}</h4>
+  <button type="button" (click)="onUpdateRoom(room)">Update</button>
+  <button type="button" (click)="onDeleteRoom(room)">Delete</button>
+
+</div>
+
+<br>
+<button type="button" (click)="onMakeRoom()">Make a room</button>
