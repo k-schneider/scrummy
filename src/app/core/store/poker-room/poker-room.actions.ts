@@ -2,89 +2,104 @@ import { Action } from '@ngrx/store';
 
 import { PokerRoom } from '../../models';
 
-export const QUERY    = '[PokerRoom] query rooms';
+/**
+ * For each action type in an action group, make
+ * constants for all of this group's action types.
+ */
+export const ADDED            = '[PokerRoom] Added';
+export const MODIFIED         = '[PokerRoom] Modified';
+export const REMOVED          = '[PokerRoom] Removed';
 
-export const ADDED    = '[PokerRoom] added';
-export const MODIFIED = '[PokerRoom] modified';
-export const REMOVED  = '[PokerRoom] removed';
+export const CREATE           = '[PokerRoom] Create';
+export const CREATE_SUCCESS   = '[PokerRoom] Create Success';
+export const CREATE_FAIL      = '[PokerRoom] Create Fail';
 
-export const CREATE   = '[PokerRoom] create';
-export const UPDATE   = '[PokerRoom] update';
-export const DELETE   = '[PokerRoom] delete';
-export const SUCCESS  = '[PokerRoom] update success';
+export const JOIN             = '[PokerRoom] Join';
+export const JOIN_SUCCESS     = '[PokerRoom] Join Success';
+export const JOIN_FAIL        = '[PokerRoom] Join Fail';
+
+export const VOTE             = '[PokerRoom] Vote';
+export const VOTE_SUCCESS     = '[PokerRoom] Vote Success';
+export const VOTE_FAIL        = '[PokerRoom] Vote Fail';
 
 /**
  * Every action is comprised of at least a type and an optional
  * payload. Expressing actions as classes enables powerful
  * type checking in reducer functions.
- *
- * See Discriminated Unions: https://www.typescriptlang.org/docs/handbook/advanced-types.html#discriminated-unions
  */
 
-// Initial query
-export class Query implements Action {
-  readonly type = QUERY;
-  constructor() {}
-}
-
-// AngularFire2 StateChanges
 export class Added implements Action {
   readonly type = ADDED;
-
-  constructor(public payload: PokerRoom) { }
+  constructor(public payload: PokerRoom) {}
 }
 
 export class Modified implements Action {
   readonly type = MODIFIED;
-
-  constructor(public payload: PokerRoom) { }
+  constructor(public payload: PokerRoom) {}
 }
 
 export class Removed implements Action {
   readonly type = REMOVED;
+  constructor(public payload: PokerRoom) {}
+}
 
+export class Create implements Action {
+  readonly type = CREATE;
   constructor(public payload: PokerRoom) { }
 }
 
-// Run a Firestore Create
-export class Create implements Action {
-  readonly type = CREATE;
-  constructor(
-    public payload: PokerRoom,
-  ) { }
+export class CreateSuccess implements Action {
+  readonly type = CREATE_SUCCESS;
 }
 
-// Run a Firestore Update
-export class Update implements Action {
-  readonly type = UPDATE;
-  constructor(
-    public id: string,
-    public changes: Partial<PokerRoom>,
-  ) { }
+export class CreateFail implements Action {
+  readonly type = CREATE_FAIL;
+  constructor(public payload?: any) { }
 }
 
-// Run a Firestore Delete
-export class Delete implements Action {
-  readonly type = DELETE;
-  constructor(
-    public id: string
-  ) { }
+export class Join implements Action {
+  readonly type = JOIN;
+  constructor(public payload: string) { }
 }
 
-export class Success implements Action {
-  readonly type = SUCCESS;
-  constructor() {}
+export class JoinSuccess implements Action {
+  readonly type = JOIN_SUCCESS;
+  constructor(public payload: PokerRoom) { }
+}
+
+export class JoinFail implements Action {
+  readonly type = JOIN_FAIL;
+  constructor(public payload?: any) { }
+}
+
+export class Vote implements Action {
+  readonly type = VOTE;
+  constructor(public payload: number | string) { }
+}
+
+export class VoteSuccess implements Action {
+  readonly type = VOTE_SUCCESS;
+}
+
+export class VoteFail implements Action {
+  readonly type = VOTE_FAIL;
+  constructor(public payload?: any) { }
 }
 
 /**
  * Export a type alias of all actions in this action group
  * so that reducers can easily compose action types
  */
-export type All =
-  Query |
-  Added |
-  Modified |
-  Removed |
-  Create |
-  Update |
-  Success;
+export type PokerRoomActions
+            = Added
+            | Modified
+            | Removed
+            | Create
+            | CreateSuccess
+            | CreateFail
+            | Join
+            | JoinSuccess
+            | JoinFail
+            | Vote
+            | VoteSuccess
+            | VoteFail;

@@ -38,4 +38,4 @@ export function reducer(state = initialState, action: actions.All): State {
  * use-case.
  */
 
- export const getValue = (state: State) => state.value;
+export const getValue = (state: State) => state.value;
