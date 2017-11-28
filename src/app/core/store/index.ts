@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
  * notation packages up all of the exports into a single object.
  */
 import * as fromCounter from './counter';
-import * as fromPokerRoom from './poker-room';
+import * as fromPoker from './poker';
 import * as fromRouter from './router';
 
 /**
@@ -18,7 +18,7 @@ import * as fromRouter from './router';
  */
 export interface State {
   counter: fromCounter.State;
-  pokerRoom: fromPokerRoom.State;
+  poker: fromPoker.State;
   router: RouterReducerState<fromRouter.State>;
 }
 
@@ -28,7 +28,7 @@ export interface State {
  */
 export const reducers: ActionReducerMap<State>  = {
   counter: fromCounter.reducer,
-  pokerRoom: fromPokerRoom.reducer,
+  poker: fromPoker.reducer,
   router: fromRouter.reducer
 };
 

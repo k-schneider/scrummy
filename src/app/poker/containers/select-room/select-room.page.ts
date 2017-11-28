@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
 import { State } from '../../../core/store';
-import * as fromPokerRoom from '../../../core/store/poker-room';
+import * as fromPoker from '../../../core/store/poker';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,11 +16,11 @@ export class SelectRoomPageComponent implements OnInit {
   ngOnInit() { }
 
   get foo() {
-    return this.store.select(fromPokerRoom.getPokerRoomState);
+    return this.store.select(fromPoker.getPokerState);
   }
 
   onMakeRoom() {
-    this.store.dispatch(new fromPokerRoom.Create({
+    this.store.dispatch(new fromPoker.CreateRoom({
       name: 'A new room',
       players: {}
     }));

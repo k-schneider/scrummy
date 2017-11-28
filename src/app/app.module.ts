@@ -9,7 +9,6 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
-import { AngularFirestoreModule } from 'angularfire2/firestore';
 
 import { environment } from '../environments/environment';
 import { metaReducers, reducers } from './core/store';
@@ -30,7 +29,6 @@ import { AuthGuard } from './auth.guard';
     StoreRouterConnectingModule,
     EffectsModule.forRoot([RouterEffects]),
     AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFirestoreModule,
     AngularFireAuthModule,
     AngularFireDatabaseModule,
     LayoutsModule

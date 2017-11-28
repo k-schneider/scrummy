@@ -7,70 +7,70 @@ import 'rxjs/add/observable/zip';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/skip';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/takeUntil';
 
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
-import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
 import * as firebase from 'firebase';
 
 import { PokerPlayer, PokerRoom } from '../../models';
 import { State } from '../index';
-import * as pokerRoomActions from './poker-room.actions';
-import * as fromPokerRoom from './poker-room.reducer';
+import * as pokerActions from './poker.actions';
+import * as fromPoker from './poker.reducer';
 import * as routerActions from '../router/router.actions';
 
 @Injectable()
-export class PokerRoomEffects {
+export class PokerEffects {
 
   constructor(
     private actions$: Actions,
-    private afs: AngularFirestore,
     private afd: AngularFireDatabase,
     private afAuth: AngularFireAuth,
     private router: Router,
     private store: Store<State>
   ) { }
 
+
   /**
    * Creates a new room in database and returns resulting key.
    */
-  @Effect() create$: Observable<Action> = this.actions$
-  .ofType(pokerRoomActions.CREATE)
-  .map((action: pokerRoomActions.Create) => action)
-  .switchMap(action => Observable.fromPromise(this.afd.list<PokerRoom>('/poker-rooms').push(action.payload)))
-  .map(res => new pokerRoomActions.CreateSuccess(res.key))
-  .catch(err => Observable.of(new pokerRoomActions.CreateFail({ error: err })));
+  @Effect() createRoom$: Observable<Action> = this.actions$
+  .ofType(pokerActions.CREATE_ROOM)
+  .map((action: pokerActions.CreateRoom) => action)
+  .switchMap(action => Observable.fromPromise(this.afd.list<PokerRoom>('/poker-rooms').push(action.pokerRoom)))
+  .map(res => new pokerActions.CreateRoomSuccess(res.key))
+  .catch(err => Observable.of(new pokerActions.CreateRoomFail(err)));
+
 
   /**
    * When a room has been successfully created then automatically navigate to it.
    */
-  @Effect() createSuccess$: Observable<Action> = this.actions$
-  .ofType(pokerRoomActions.CREATE_SUCCESS)
-  .map((action: pokerRoomActions.CreateSuccess) => action)
+  @Effect() createRoomSuccess$: Observable<Action> = this.actions$
+  .ofType(pokerActions.CREATE_ROOM_SUCCESS)
+  .map((action: pokerActions.CreateRoomSuccess) => action)
   .map(action => new routerActions.Go({
-    path: ['/poker/room/' + action.payload]
+    path: ['/poker/room/' + action.pokerRoomId]
   }));
+
 
   /**
    * Starts the join room process by first pulling back current
    * room data and subscribing to room changes.
    */
-  @Effect() join$: Observable<Action> = this.actions$
-  .ofType(pokerRoomActions.JOIN)
-  .map((action: pokerRoomActions.Join) => action)
-  .map(action => this.afd.object<PokerRoom>(`/poker-rooms/${action.payload}`))
+  @Effect() joinRoom$: Observable<Action> = this.actions$
+  .ofType(pokerActions.JOIN_ROOM)
+  .map((action: pokerActions.JoinRoom) => action)
+  .map(action => this.afd.object<PokerRoom>(`/poker-rooms/${action.pokerRoomId}`))
   .do(ref => {
     // listen for any changes to the poker room and
     // dispatch the modified event so store value can be updated
     // and stop when user leaves the room
-    const leave$ = this.actions$.ofType(pokerRoomActions.LEAVE);
+    const leave$ = this.actions$.ofType(pokerActions.LEAVE_ROOM);
     ref.snapshotChanges().takeUntil(leave$).subscribe(data => {
-      this.store.dispatch(new pokerRoomActions.Modified(<PokerRoom>{
+      this.store.dispatch(new pokerActions.RoomModified(<PokerRoom>{
         id: data.key,
         ...data.payload.val()
       }));
@@ -78,22 +78,24 @@ export class PokerRoomEffects {
   })
   .switchMap(ref => ref.snapshotChanges().first())
   .map(data => {
-    return new pokerRoomActions.JoinSuccess(<PokerRoom>{
+    return new pokerActions.JoinRoomSuccess(<PokerRoom>{
       id: data.key,
       ...data.payload.val()
     });
   })
-  .catch(err => Observable.of(new pokerRoomActions.JoinFail({ error: err })));
+  .catch(err => Observable.of(new pokerActions.JoinRoomFail(err)));
+
 
   /**
    * After successfully joining a room we want to have 'presence' in this room.
    * As we connect/disconnect we want a player to be added/removed from the room.
    */
-  @Effect() joinSuccess$: Observable<Action> = this.actions$
-  .ofType(pokerRoomActions.JOIN_SUCCESS)
-  .map((action: pokerRoomActions.JoinSuccess) => action)
+  @Effect() joinRoomSuccess$: Observable<Action> = this.actions$
+  .ofType(pokerActions.JOIN_ROOM_SUCCESS)
+  .map((action: pokerActions.JoinRoomSuccess) => action)
   .map(action => {
-    const roomPath = `/poker-rooms/${action.payload.id}`;
+    // Get a reference to the specific player
+    const roomPath = `/poker-rooms/${action.pokerRoom.id}`;
     const playerPath = `${roomPath}/players/${this.afAuth.auth.currentUser.uid}`;
     const playerRef = this.afd.database.ref(playerPath);
 
@@ -124,20 +126,22 @@ export class PokerRoomEffects {
         };
         playerRef.set(player);
       });
+
     });
 
     // store connectedSub in state so that off() can be called when leaving room
-    return new pokerRoomActions.RoomConnected({ connectionRef });
+    return new pokerActions.RoomConnected({ connectionRef });
   });
+
 
   /**
    * Upon leaving we need to remove the player from the room and disconnect presence.
    */
   @Effect() leave$: Observable<Action> = this.actions$
-  .ofType(pokerRoomActions.LEAVE)
+  .ofType(pokerActions.LEAVE_ROOM)
   .withLatestFrom(this.store)
   .switchMap(([action, store]) => {
-    const roomPath = `/poker-rooms/${store.pokerRoom.pokerRoom.id}`;
+    const roomPath = `/poker-rooms/${store.poker.room.id}`;
     const playerPath = `${roomPath}/players/${this.afAuth.auth.currentUser.uid}`;
     const playerRef = this.afd.database.ref(playerPath);
 
@@ -151,8 +155,8 @@ export class PokerRoomEffects {
   .map(data => data[0])
   .map(store => {
     // stop monitoring connection for this room
-    this.afd.database.ref('.info/connected').off('value', store.pokerRoom.connectionRef);
-    return new pokerRoomActions.LeaveSuccess();
+    this.afd.database.ref('.info/connected').off('value', store.poker.connectionRef);
+    return new pokerActions.LeaveRoomSuccess();
   });
 
 }

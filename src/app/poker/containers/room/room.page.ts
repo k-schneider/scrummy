@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import { State } from '../../../core/store';
-import * as fromPokerRoom from '../../../core/store/poker-room';
+import * as fromPoker from '../../../core/store/poker';
 
 @Component({
   templateUrl: './room.page.html'
@@ -17,16 +17,15 @@ export class RoomPageComponent implements OnInit, OnDestroy {
   ) { }
 
   get foo() {
-    return this.store.select(fromPokerRoom.getPokerRoomState);
+    return this.store.select(fromPoker.getPokerState);
   }
 
   ngOnInit() {
     const roomId = this.route.snapshot.paramMap.get('id');
-    this.store.dispatch(new fromPokerRoom.Join(roomId));
+    this.store.dispatch(new fromPoker.JoinRoom(roomId));
   }
 
   ngOnDestroy() {
-    console.log('destroying!!!');
-    this.store.dispatch(new fromPokerRoom.Leave());
+    this.store.dispatch(new fromPoker.LeaveRoom());
   }
 }
