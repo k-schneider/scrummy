@@ -1,4 +1,5 @@
 import { Action } from '@ngrx/store';
+import * as firebase from 'firebase';
 
 import { PokerRoom } from '../../models';
 
@@ -6,9 +7,7 @@ import { PokerRoom } from '../../models';
  * For each action type in an action group, make
  * constants for all of this group's action types.
  */
-export const ADDED            = '[PokerRoom] Added';
 export const MODIFIED         = '[PokerRoom] Modified';
-export const REMOVED          = '[PokerRoom] Removed';
 
 export const CREATE           = '[PokerRoom] Create';
 export const CREATE_SUCCESS   = '[PokerRoom] Create Success';
@@ -22,26 +21,26 @@ export const VOTE             = '[PokerRoom] Vote';
 export const VOTE_SUCCESS     = '[PokerRoom] Vote Success';
 export const VOTE_FAIL        = '[PokerRoom] Vote Fail';
 
+export const LEAVE            = '[PokerRoom] Leave';
+export const LEAVE_SUCCESS    = '[PokerRoom] Leave Success';
+
+export const ROOM_CONNECTED   = '[PokerRoom] Room Connected';
+
 /**
  * Every action is comprised of at least a type and an optional
  * payload. Expressing actions as classes enables powerful
  * type checking in reducer functions.
  */
 
-export class Added implements Action {
-  readonly type = ADDED;
-  constructor(public payload: PokerRoom) {}
-}
+
+// -- AngularFire2 StateChanges
 
 export class Modified implements Action {
   readonly type = MODIFIED;
   constructor(public payload: PokerRoom) {}
 }
 
-export class Removed implements Action {
-  readonly type = REMOVED;
-  constructor(public payload: PokerRoom) {}
-}
+// Create a room in the database
 
 export class Create implements Action {
   readonly type = CREATE;
@@ -50,12 +49,15 @@ export class Create implements Action {
 
 export class CreateSuccess implements Action {
   readonly type = CREATE_SUCCESS;
+  constructor(public payload: string) { }
 }
 
 export class CreateFail implements Action {
   readonly type = CREATE_FAIL;
   constructor(public payload?: any) { }
 }
+
+// Join an existing room --
 
 export class Join implements Action {
   readonly type = JOIN;
@@ -72,6 +74,8 @@ export class JoinFail implements Action {
   constructor(public payload?: any) { }
 }
 
+// Cast your vote --
+
 export class Vote implements Action {
   readonly type = VOTE;
   constructor(public payload: number | string) { }
@@ -86,14 +90,29 @@ export class VoteFail implements Action {
   constructor(public payload?: any) { }
 }
 
+// -- Presence connected to room
+
+export class RoomConnected implements Action {
+  readonly type = ROOM_CONNECTED;
+  constructor(public payload: any) { }
+}
+
+// -- Leave a room
+
+export class Leave implements Action {
+  readonly type = LEAVE;
+}
+
+export class LeaveSuccess implements Action {
+  readonly type = LEAVE_SUCCESS;
+}
+
 /**
  * Export a type alias of all actions in this action group
  * so that reducers can easily compose action types
  */
 export type PokerRoomActions
-            = Added
-            | Modified
-            | Removed
+            = Modified
             | Create
             | CreateSuccess
             | CreateFail
@@ -102,4 +121,7 @@ export type PokerRoomActions
             | JoinFail
             | Vote
             | VoteSuccess
-            | VoteFail;
+            | VoteFail
+            | RoomConnected
+            | Leave
+            | LeaveSuccess;

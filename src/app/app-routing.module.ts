@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { AuthGuard } from './auth.guard';
+
 const routes: Routes = [
   {
     path: '',
@@ -9,7 +11,8 @@ const routes: Routes = [
   },
   {
     path: 'poker',
-    loadChildren: 'app/poker/poker.module#PokerModule'
+    loadChildren: 'app/poker/poker.module#PokerModule',
+    canActivate: [AuthGuard]
   }
 ];
 

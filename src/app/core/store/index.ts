@@ -19,7 +19,7 @@ import * as fromRouter from './router';
 export interface State {
   counter: fromCounter.State;
   pokerRoom: fromPokerRoom.State;
-  routerReducer: RouterReducerState<fromRouter.State>;
+  router: RouterReducerState<fromRouter.State>;
 }
 
 /**
@@ -29,7 +29,7 @@ export interface State {
 export const reducers: ActionReducerMap<State>  = {
   counter: fromCounter.reducer,
   pokerRoom: fromPokerRoom.reducer,
-  routerReducer: fromRouter.reducer
+  router: fromRouter.reducer
 };
 
 const metaReducersDev = [];

@@ -1,4 +1,4 @@
-import { createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import { PokerRoom } from '../../models';
 import * as pokerRoomActions from './poker-room.actions';
@@ -6,14 +6,15 @@ import * as pokerRoomActions from './poker-room.actions';
 // tslint:disable-next-line:no-empty-interface
 export interface State {
   error?: any;
-  loading: boolean;
-  playerId: string;
+  connectionRef?: any;
+  creating: boolean;
+  joining: boolean;
   pokerRoom: PokerRoom;
 }
 
 export const initialState: State = {
-  loading: false,
-  playerId: null,
+  creating: false,
+  joining: false,
   pokerRoom: null
 };
 
@@ -24,16 +25,36 @@ export function reducer(state = initialState, action: pokerRoomActions.PokerRoom
       return Object.assign({}, state, { pokerRoom: action.payload });
     }
 
+    case pokerRoomActions.CREATE: {
+      return Object.assign({}, state, { creating: true });
+    }
+
+    case pokerRoomActions.CREATE_SUCCESS: {
+      return Object.assign({}, state, { creating: false });
+    }
+
+    case pokerRoomActions.CREATE_FAIL: {
+      return Object.assign({}, state, { error: action.payload, creating: false });
+    }
+
     case pokerRoomActions.JOIN: {
-      return Object.assign({}, state, { loading: true });
+      return Object.assign({}, state, { joining: true });
     }
 
     case pokerRoomActions.JOIN_SUCCESS: {
-      return Object.assign({}, state, { pokerRoom: action.payload, loading: false });
+      return Object.assign({}, state, { pokerRoom: action.payload });
     }
 
     case pokerRoomActions.JOIN_FAIL: {
-      return Object.assign({}, state, { error: action.payload, loading: false });
+      return Object.assign({}, state, { error: action.payload, joining: false });
+    }
+
+    case pokerRoomActions.ROOM_CONNECTED: {
+      return Object.assign({}, state, { ...action.payload, joining: false });
+    }
+
+    case pokerRoomActions.LEAVE_SUCCESS: {
+      return Object.assign({}, state, { pokerRoom: null });
     }
 
     default: {
@@ -52,3 +73,11 @@ export function reducer(state = initialState, action: pokerRoomActions.PokerRoom
  */
 
 export const getPokerRoomState = createFeatureSelector<State>('pokerRoom');
+
+export const getConnectionRef = createSelector(getPokerRoomState, state => {
+  return state.connectionRef;
+});
+
+export const getPokerRoom = createSelector(getPokerRoomState, state => {
+  return state.pokerRoom;
+});

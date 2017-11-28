@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
 import { State } from '../../../core/store';
-import { PokerRoom } from '../../../core/models';
 import * as fromPokerRoom from '../../../core/store/poker-room';
 
 @Component({
@@ -16,14 +15,14 @@ export class SelectRoomPageComponent implements OnInit {
 
   ngOnInit() { }
 
+  get foo() {
+    return this.store.select(fromPokerRoom.getPokerRoomState);
+  }
+
   onMakeRoom() {
     this.store.dispatch(new fromPokerRoom.Create({
       name: 'A new room',
       players: {}
     }));
-  }
-
-  onJoinRoom() {
-    this.store.dispatch(new fromPokerRoom.Join('muRzca6WS6xKHdTgOdfW'));
   }
 }

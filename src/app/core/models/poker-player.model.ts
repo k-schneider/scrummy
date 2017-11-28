@@ -1,4 +1,4 @@
 export interface PokerPlayer {
   name: string;
-  vote: number | string;
+  vote?: number | string | null;
 }
