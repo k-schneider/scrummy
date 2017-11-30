@@ -52,16 +52,19 @@ export class AuthEffects {
   @Effect() setDisplayName$: Observable<Action> = this.actions$.ofType(authActions.SET_DISPLAY_NAME)
     .map((action: authActions.SetDisplayName) => action)
     .switchMap(action => {
-      return Observable.fromPromise(this.afAuth.auth.currentUser.updateProfile({ displayName: action.displayName, photoURL: null }));
+      return Observable.fromPromise(this.afAuth.auth.currentUser.updateProfile({ displayName: action.displayName, photoURL: null }))
+        .map(() => action);
     })
-    .map(() => new authActions.SetDisplayNameSuccess(this.afAuth.auth.currentUser.displayName))
+    .map(action => new authActions.SetDisplayNameSuccess(this.afAuth.auth.currentUser.displayName))
     .catch(err => Observable.of(new authActions.AuthError(err.message)));
 
   @Effect() setDisplayNameSuccess$: Observable<Action> = this.actions$.ofType(authActions.SET_DISPLAY_NAME_SUCCESS)
     .map((action: authActions.SetDisplayNameSuccess) => action)
-    .map(() => {
+    .withLatestFrom(this.store)
+    .map(([action, state]) => {
+      const dest = state.router.state.queryParams.return_url || '/';
       return new routerActions.Go({
-        path: ['/']
+        path: [dest]
       });
     });
 
