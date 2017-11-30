@@ -1,10 +1,5 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
-import { EffectsModule } from '@ngrx/effects';
-
-import { PokerEffects } from '../core/store/poker';
 
 import {
   RoomPageComponent,
@@ -29,9 +24,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    EffectsModule.forFeature([PokerEffects])
+    RouterModule.forChild(routes)
   ],
   exports: [RouterModule]
 })

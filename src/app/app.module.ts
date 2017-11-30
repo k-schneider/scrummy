@@ -13,9 +13,9 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { environment } from '../environments/environment';
 import { metaReducers, reducers } from './core/store';
 import { CustomRouterStateSerializer, RouterEffects } from './core/store/router';
+import { AuthModule } from './auth';
 import { LayoutsModule, RootComponent } from './layouts';
 import { AppRoutingModule } from './app-routing.module';
-import { AuthGuard } from './auth.guard';
 
 @NgModule({
   declarations: [],
@@ -31,10 +31,10 @@ import { AuthGuard } from './auth.guard';
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
     AngularFireDatabaseModule,
+    AuthModule,
     LayoutsModule
   ],
   providers: [
-    AuthGuard,
     { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer }
   ],
   bootstrap: [RootComponent]

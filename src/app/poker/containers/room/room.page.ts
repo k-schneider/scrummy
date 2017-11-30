@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { Store } from '@ngrx/store';
@@ -7,6 +7,7 @@ import { State } from '../../../core/store';
 import * as fromPoker from '../../../core/store/poker';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './room.page.html'
 })
 export class RoomPageComponent implements OnInit, OnDestroy {
@@ -27,5 +28,9 @@ export class RoomPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.store.dispatch(new fromPoker.LeaveRoom());
+  }
+
+  onVote() {
+    this.store.dispatch(new fromPoker.Vote(666));
   }
 }

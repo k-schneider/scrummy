@@ -8,6 +8,7 @@ import { environment } from '../../../environments/environment';
  * the state of the reducer plus any selector functions. The `* as`
  * notation packages up all of the exports into a single object.
  */
+import * as fromAuth from './auth';
 import * as fromCounter from './counter';
 import * as fromPoker from './poker';
 import * as fromRouter from './router';
@@ -17,6 +18,7 @@ import * as fromRouter from './router';
  * our top level state interface is just a map of keys to inner state types.
  */
 export interface State {
+  auth: fromAuth.State;
   counter: fromCounter.State;
   poker: fromPoker.State;
   router: RouterReducerState<fromRouter.State>;
@@ -27,6 +29,7 @@ export interface State {
  * based on targetted environment.
  */
 export const reducers: ActionReducerMap<State>  = {
+  auth: fromAuth.reducer,
   counter: fromCounter.reducer,
   poker: fromPoker.reducer,
   router: fromRouter.reducer
@@ -56,7 +59,3 @@ export const metaReducers = environment.production
  */
 export const getCounterState = (state: State) => state.counter;
 export const getCounterValue = createSelector(getCounterState, fromCounter.getValue);
-
-/**
- * Poker Room Selectors
- */

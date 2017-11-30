@@ -3,18 +3,16 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { PokerRoom } from '../../models';
 import * as pokerActions from './poker.actions';
 
-// tslint:disable-next-line:no-empty-interface
 export interface State {
-  creating: boolean;
-  joining: boolean;
   room: PokerRoom;
+  creating?: boolean;
+  joining?: boolean;
+  voting?: boolean;
   error?: any;
   connectionRef?: any;
 }
 
 export const initialState: State = {
-  creating: false,
-  joining: false,
   room: null
 };
 
@@ -55,6 +53,18 @@ export function reducer(state = initialState, action: pokerActions.PokerActions)
 
     case pokerActions.LEAVE_ROOM_SUCCESS: {
       return Object.assign({}, state, { room: null });
+    }
+
+    case pokerActions.VOTE: {
+      return Object.assign({}, state, { voting: true });
+    }
+
+    case pokerActions.VOTE_SUCCESS: {
+      return Object.assign({}, state, { voting: false });
+    }
+
+    case pokerActions.VOTE_FAIL: {
+      return Object.assign({}, state, { error: action.error, voting: false });
     }
 
     default: {

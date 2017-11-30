@@ -1,13 +1,17 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { AuthGuard } from './auth.guard';
+import { AuthGuard, LoginPageComponent } from './auth';
 
 const routes: Routes = [
   {
     path: '',
     redirectTo: 'poker',
     pathMatch: 'full'
+  },
+  {
+    path: 'login',
+    component: LoginPageComponent
   },
   {
     path: 'poker',
