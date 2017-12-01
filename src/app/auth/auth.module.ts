@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { EffectsModule } from '@ngrx/effects';
 
@@ -21,7 +22,8 @@ const providers = [
 @NgModule({
   imports: [
     CommonModule,
-    EffectsModule.forFeature([AuthEffects]),
+    FormsModule,
+    EffectsModule.forFeature([AuthEffects])
   ],
   declarations: [...components],
   providers: [...providers]

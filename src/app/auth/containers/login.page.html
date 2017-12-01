@@ -1,6 +1,9 @@
-Welcome to login!
-<br><br>
-user: {{user$ | async | json}}<br>
-loading: {{loading$ | async}}
+<div class="login-page">
 
-<button type="button" (click)="onContinue()">Continue</button>
+  <div class="login">
+    <label for="name">Hi, what is your name?</label>
+    <input id="name" class="input" placeholder="George R.R. Martin" [(ngModel)]="name">
+    <button type="button" class="btn btn-primary btn-block" (click)="onContinue()">Continue</button>
+  </div>
+
+</div>
