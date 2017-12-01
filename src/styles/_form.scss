@@ -11,3 +11,12 @@
   color: #ccc;
 }
 
+.input.invalid {
+  border: solid 1px red;
+}
+
+.control-error {
+  color: red;
+  display: inline-block;
+  margin-top: .5rem;
+}

@@ -36,10 +36,11 @@ export class PokerEffects {
   @Effect() createRoom$: Observable<Action> = this.actions$
     .ofType(pokerActions.CREATE_ROOM)
     .map((action: pokerActions.CreateRoom) => action)
-    .switchMap(action => Observable.fromPromise(this.afd.list<PokerRoom>('/poker-rooms').push(action.pokerRoom)))
-    .map(res => new pokerActions.CreateRoomSuccess(res.key))
-    .catch(err => Observable.of(new pokerActions.CreateRoomFail(err)));
-
+    .switchMap(action => {
+      return Observable.fromPromise(this.afd.list<PokerRoom>('/poker-rooms').push(action.pokerRoom))
+        .map(res => new pokerActions.CreateRoomSuccess(res.key))
+        .catch(err => Observable.of(new pokerActions.CreateRoomFail(err.message)));
+    });
 
   /**
    * When a room has been successfully created then automatically navigate to it.
@@ -65,21 +66,32 @@ export class PokerEffects {
       // dispatch the modified event so store value can be updated
       // and stop when user leaves the room
       const leave$ = this.actions$.ofType(pokerActions.LEAVE_ROOM);
-      ref.snapshotChanges().takeUntil(leave$).subscribe(data => {
+      const sub = ref.snapshotChanges().takeUntil(leave$).subscribe(data => {
+        if (!data.key) {
+          // bad room id
+          sub.unsubscribe();
+        }
+
         this.store.dispatch(new pokerActions.RoomModified(<PokerRoom>{
           id: data.key,
           ...data.payload.val()
         }));
       });
     })
-    .switchMap(ref => ref.snapshotChanges().first())
-    .map(data => {
-      return new pokerActions.JoinRoomSuccess(<PokerRoom>{
-        id: data.key,
-        ...data.payload.val()
-      });
-    })
-    .catch(err => Observable.of(new pokerActions.JoinRoomFail(err)));
+    .switchMap(ref => {
+      return ref.snapshotChanges().first()
+        .map(data => {
+          if (!data.key) {
+            // bad room id
+            throw Error(`Room not found!`);
+          }
+          return new pokerActions.JoinRoomSuccess(<PokerRoom>{
+            id: data.key,
+            ...data.payload.val()
+          });
+        })
+        .catch(err => Observable.of(new pokerActions.JoinRoomFail(err.message)));
+    });
 
 
   /**
@@ -131,6 +143,7 @@ export class PokerEffects {
     });
 
 
+
   /**
    * Upon leaving we need to remove the player from the room and disconnect presence.
    */
@@ -156,14 +169,17 @@ export class PokerEffects {
       return new pokerActions.LeaveRoomSuccess();
     });
 
+  /**
+   * Update the players vote in database.
+   */
   @Effect() vote$: Observable<Action> = this.actions$
     .ofType(pokerActions.VOTE)
     .map((action: pokerActions.Vote) => action)
     .withLatestFrom(this.store)
     .switchMap(([action, state]) => {
       const playerRef = this.afd.object<PokerPlayer>(`/poker-rooms/${state.poker.room.id}/players/${state.auth.user.uid}`);
-      return Observable.fromPromise(playerRef.update({ vote: action.vote }));
-    })
-    .map(res => new pokerActions.VoteSuccess())
-    .catch(err => Observable.of(new pokerActions.VoteFail(err)));
+      return Observable.fromPromise(playerRef.update({ vote: action.vote }))
+        .map(res => new pokerActions.VoteSuccess())
+        .catch(err => Observable.of(new pokerActions.VoteFail(err.message)));
+    });
 }

@@ -1,0 +1,5 @@
+<label class="sr-only" for="roomName">Enter Room Name</label>
+<input id="roomName" class="input" placeholder="Enter Room Name" [(ngModel)]="roomName" [class.invalid]="error$ | async">
+<span class="control-error" *ngIf="error$ | async as error">{{error}}</span>
+
+<button type="button" class="btn btn-primary btn-block" (click)="onMakeRoom()">Make a Room</button>

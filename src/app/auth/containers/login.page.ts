@@ -24,6 +24,12 @@ export class LoginPageComponent implements OnInit {
     this.loading$ = this.store.select(fromAuth.getLoading);
     this.user$ = this.store.select(fromAuth.getUser);
     this.store.dispatch(new fromAuth.GetUser());
+
+    this.user$.subscribe(user => {
+      if (user) {
+        this.name = user.displayName;
+      }
+    });
   }
 
   onContinue() {

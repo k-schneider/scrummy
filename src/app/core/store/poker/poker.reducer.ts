@@ -6,9 +6,11 @@ import * as pokerActions from './poker.actions';
 export interface State {
   room: PokerRoom;
   creating?: boolean;
+  createError?: string;
   joining?: boolean;
+  joinError?: string;
   voting?: boolean;
-  error?: any;
+  voteError?: string;
   connectionRef?: any;
 }
 
@@ -24,27 +26,27 @@ export function reducer(state = initialState, action: pokerActions.PokerActions)
     }
 
     case pokerActions.CREATE_ROOM: {
-      return Object.assign({}, state, { creating: true });
+      return Object.assign({}, state, { creating: true, createError: null });
     }
 
     case pokerActions.CREATE_ROOM_SUCCESS: {
-      return Object.assign({}, state, { creating: false });
+      return Object.assign({}, state, { creating: false, createError: null });
     }
 
     case pokerActions.CREATE_ROOM_FAIL: {
-      return Object.assign({}, state, { error: action.error, creating: false });
+      return Object.assign({}, state, { createError: action.error, creating: false });
     }
 
     case pokerActions.JOIN_ROOM: {
-      return Object.assign({}, state, { joining: true });
+      return Object.assign({}, state, { joining: true, joinError: null });
     }
 
     case pokerActions.JOIN_ROOM_SUCCESS: {
-      return Object.assign({}, state, { room: action.pokerRoom });
+      return Object.assign({}, state, { room: action.pokerRoom, joinError: null });
     }
 
     case pokerActions.JOIN_ROOM_FAIL: {
-      return Object.assign({}, state, { error: action.error, joining: false });
+      return Object.assign({}, state, { joinError: action.error, joining: false });
     }
 
     case pokerActions.ROOM_CONNECTED: {
@@ -56,15 +58,15 @@ export function reducer(state = initialState, action: pokerActions.PokerActions)
     }
 
     case pokerActions.VOTE: {
-      return Object.assign({}, state, { voting: true });
+      return Object.assign({}, state, { voting: true, voteError: null });
     }
 
     case pokerActions.VOTE_SUCCESS: {
-      return Object.assign({}, state, { voting: false });
+      return Object.assign({}, state, { voting: false, voteError: null });
     }
 
     case pokerActions.VOTE_FAIL: {
-      return Object.assign({}, state, { error: action.error, voting: false });
+      return Object.assign({}, state, { voteError: action.error, voting: false });
     }
 
     default: {
@@ -84,10 +86,6 @@ export function reducer(state = initialState, action: pokerActions.PokerActions)
 
 export const getPokerState = createFeatureSelector<State>('poker');
 
-export const getConnectionRef = createSelector(getPokerState, state => {
-  return state.connectionRef;
-});
-
-export const getPokerRoom = createSelector(getPokerState, state => {
-  return state.room;
-});
+export const getConnectionRef = createSelector(getPokerState, state => state.connectionRef);
+export const getPokerRoom = createSelector(getPokerState, state => state.room);
+export const getJoinError = createSelector(getPokerState, state => state.joinError);

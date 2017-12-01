@@ -4,12 +4,12 @@
   height: 100%;
 }
 
-.login-page {
+.select-room-page {
   position: relative;
   height: 100%;
 }
 
-.login {
+.options {
   background-color: #fff;
   border-radius: 3px;
   padding: 1.25rem;
@@ -19,13 +19,12 @@
   transform: translate(-50%, -50%);
   min-width: 360px;
 
-  label {
+  .or {
+    color: #666;
     display: block;
+    text-align: center;
     font-size: 24px;
-    margin-bottom: 1.5rem;
-  }
-
-  .btn-primary {
-    margin-top: 1rem;
+    font-weight: bold;
+    margin: 1.5rem;
   }
 }
