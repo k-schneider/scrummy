@@ -14,7 +14,7 @@ import { environment } from '../environments/environment';
 import { metaReducers, reducers } from './core/store';
 import { CustomRouterStateSerializer, RouterEffects } from './core/store/router';
 import { AuthModule } from './auth';
-import { LayoutsModule, RootComponent } from './layouts';
+import { LayoutsModule, MainComponent } from './layouts';
 import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
@@ -37,6 +37,6 @@ import { AppRoutingModule } from './app-routing.module';
   providers: [
     { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer }
   ],
-  bootstrap: [RootComponent]
+  bootstrap: [MainComponent]
 })
 export class AppModule { }

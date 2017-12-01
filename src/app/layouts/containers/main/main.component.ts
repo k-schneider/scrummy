@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'scr-root',
+  selector: 'scr-main',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './root.component.html'
+  templateUrl: './main.component.html'
 })
-export class RootComponent implements OnInit {
+export class MainComponent implements OnInit {
   constructor() { }
 
   ngOnInit() { }

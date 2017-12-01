@@ -1,10 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { RootComponent } from './root';
+import {
+  MainComponent,
+  NotFoundPageComponent
+} from './containers';
 
 export const components = [
-  RootComponent
+  MainComponent,
+  NotFoundPageComponent
 ];
 
 @NgModule({

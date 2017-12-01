@@ -11,16 +11,18 @@ import {
 } from './containers';
 import { PokerRoutingModule } from './poker-routing.module';
 
+const components = [
+  RoomPageComponent,
+  SelectRoomPageComponent
+];
+
 @NgModule({
   imports: [
     CommonModule,
     EffectsModule.forFeature([PokerEffects]),
     PokerRoutingModule
   ],
-  declarations: [
-    RoomPageComponent,
-    SelectRoomPageComponent
-  ],
+  declarations: [...components],
   providers: []
 })
 export class PokerModule { }

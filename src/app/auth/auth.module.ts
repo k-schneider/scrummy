@@ -10,14 +10,20 @@ import {
   LoginPageComponent
 } from './containers';
 
+const components = [
+  LoginPageComponent
+];
+
+const providers = [
+  AuthGuard
+];
+
 @NgModule({
   imports: [
     CommonModule,
     EffectsModule.forFeature([AuthEffects]),
   ],
-  declarations: [
-    LoginPageComponent
-  ],
-  providers: [AuthGuard]
+  declarations: [...components],
+  providers: [...providers]
 })
 export class AuthModule { }

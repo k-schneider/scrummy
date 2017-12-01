@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AuthGuard, LoginPageComponent } from './auth';
+import { NotFoundPageComponent } from './layouts';
 
 const routes: Routes = [
   {
@@ -17,6 +18,10 @@ const routes: Routes = [
     path: 'poker',
     loadChildren: 'app/poker/poker.module#PokerModule',
     canActivate: [AuthGuard]
+  },
+  {
+    path: '**',
+    component: NotFoundPageComponent
   }
 ];
 
