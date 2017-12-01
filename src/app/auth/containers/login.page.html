@@ -3,7 +3,7 @@
   <div class="login">
     <label for="name">Hi, what is your name?</label>
     <input id="name" class="input" placeholder="George R.R. Martin" [(ngModel)]="name">
-    <button type="button" class="btn btn-primary btn-block" (click)="onContinue()">Continue</button>
+    <button type="button" class="btn btn-primary btn-block" (click)="onContinue()" [disabled]="loading$ | async">Continue</button>
   </div>
 
 </div>
