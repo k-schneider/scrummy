@@ -18,7 +18,7 @@
     <h2>Players</h2>
     <p *ngFor="let player of room.players | scrKeys:false">{{player.name}} - {{player.vote}}</p>
 
-    <!-- todo: should only be available to moderator of room -->
+    <!-- moderator actions -->
     <ng-container *ngIf="isModerator$ | async">
       <div *ngIf="room.state === statesEnum.Voting">
         <button type="button" (click)="onClearVotes()">Clear Votes</button>

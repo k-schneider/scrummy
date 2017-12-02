@@ -129,6 +129,7 @@ export function reducer(state = initialState, action: pokerActions.PokerActions)
 
 export const getPokerState = createFeatureSelector<State>('poker');
 
+export const getCreateError = createSelector(getPokerState, state => state.createError);
 export const getConnectionRef = createSelector(getPokerState, state => state.connectionRef);
 export const getPokerRoom = createSelector(getPokerState, state => state.room);
 export const getJoining = createSelector(getPokerState, state => state.joining);

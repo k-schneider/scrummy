@@ -2,7 +2,7 @@
 
   <!-- todo: show load indicator -->
 
-  <div class="login" *ngIf="!($loading | async)">
+  <div class="login" *ngIf="!(loading$ | async)">
     <label for="name">Hi, what is your name?</label>
     <input id="name" class="input" placeholder="George R.R. Martin" [(ngModel)]="name">
     <button type="button" class="btn btn-primary btn-block" (click)="onContinue()" [disabled]="loading$ | async">Continue</button>

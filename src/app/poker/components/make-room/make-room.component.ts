@@ -7,6 +7,7 @@ import { PokerRoomState } from '../../../core/enums';
 import { State } from '../../../core/store';
 import * as fromAuth from '../../../core/store/auth';
 import * as fromPoker from '../../../core/store/poker';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,11 +16,14 @@ import * as fromPoker from '../../../core/store/poker';
   styleUrls: ['./make-room.component.scss']
 })
 export class MakeRoomComponent implements OnInit {
+  error$: Observable<string>;
   roomName: string;
 
   constructor(private store: Store<State>) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.error$ = this.store.select(fromPoker.getCreateError);
+  }
 
   onMakeRoom() {
     if (!this.roomName) {
