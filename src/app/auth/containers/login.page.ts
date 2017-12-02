@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 import { Store } from '@ngrx/store';
 
@@ -13,10 +14,11 @@ import { User } from '../../core/models';
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss']
 })
-export class LoginPageComponent implements OnInit {
+export class LoginPageComponent implements OnInit, OnDestroy {
   loading$: Observable<boolean>;
   name: string;
   user$: Observable<User>;
+  private userSub: Subscription;
 
   constructor(private store: Store<State>) { }
 
@@ -25,11 +27,18 @@ export class LoginPageComponent implements OnInit {
     this.user$ = this.store.select(fromAuth.getUser);
     this.store.dispatch(new fromAuth.GetUser());
 
-    this.user$.subscribe(user => {
+    // get the current user if there is one so we can pre-populate name
+    this.userSub = this.user$.subscribe(user => {
       if (user) {
         this.name = user.displayName;
       }
     });
+  }
+
+  ngOnDestroy() {
+    if (this.userSub) {
+      this.userSub.unsubscribe();
+    }
   }
 
   onContinue() {

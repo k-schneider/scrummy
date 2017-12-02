@@ -13,7 +13,6 @@ import * as fromPoker from '../../../core/store/poker';
   templateUrl: './poker-room.component.html'
 })
 export class PokerRoomComponent implements OnInit {
-  cardValues = [0, 1, 2, 3, 5, 8, 13, 20, 40, 100, '?']; // todo: these should come from room
   room$: Observable<PokerRoom>;
 
   constructor(private store: Store<State>) { }
@@ -22,7 +21,16 @@ export class PokerRoomComponent implements OnInit {
     this.room$ = this.store.select(fromPoker.getPokerRoom);
   }
 
+  onClearVotes() {
+    this.store.dispatch(new fromPoker.ClearVotes());
+  }
+
+  onFlipCards() {
+    alert('todo');
+  }
+
   onVote(value: number | string) {
     this.store.dispatch(new fromPoker.Vote(value));
   }
+
 }

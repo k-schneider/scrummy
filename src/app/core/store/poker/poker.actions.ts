@@ -18,6 +18,14 @@ export const VOTE                 = '[Poker] Vote';
 export const VOTE_SUCCESS         = '[Poker] Vote Success';
 export const VOTE_FAIL            = '[Poker] Vote Fail';
 
+export const CLEAR_VOTES          = '[Poker] Clear Votes';
+export const CLEAR_VOTES_SUCCESS  = '[Poker] Clear Votes Success';
+export const CLEAR_VOTES_FAIL     = '[Poker] Clear Votes Fail';
+
+export const FLIP_CARDS           = '[Poker] Clear Votes';
+export const FLIP_CARDS_SUCCESS   = '[Poker] Flip Cards Success';
+export const FLIP_CARDS_FAIL      = '[Poker] Flip Cards Fail';
+
 export const LEAVE_ROOM           = '[Poker] Leave Room';
 export const LEAVE_ROOM_SUCCESS   = '[Poker] Leave Room Success';
 
@@ -105,6 +113,21 @@ export class VoteFail implements Action {
   constructor(public error?: any) { }
 }
 
+// -- Clear votes
+
+export class ClearVotes implements Action {
+  readonly type = CLEAR_VOTES;
+}
+
+export class ClearVotesSuccess implements Action {
+  readonly type = CLEAR_VOTES_SUCCESS;
+}
+
+export class ClearVotesFail implements Action {
+  readonly type = CLEAR_VOTES_FAIL;
+  constructor(public error?: any) { }
+}
+
 /**
  * Export a type alias of all actions in this action group
  * so that reducers can easily compose action types
@@ -122,4 +145,7 @@ export type PokerActions
             | LeaveRoomSuccess
             | Vote
             | VoteSuccess
-            | VoteFail;
+            | VoteFail
+            | ClearVotes
+            | ClearVotesSuccess
+            | ClearVotesFail;

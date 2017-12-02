@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 
+import { PokerRoomState } from '../../../core/enums';
 import { State } from '../../../core/store';
 import * as fromPoker from '../../../core/store/poker';
 
@@ -24,6 +25,8 @@ export class MakeRoomComponent implements OnInit {
 
     this.store.dispatch(new fromPoker.CreateRoom({
       name: this.roomName,
+      state: PokerRoomState.Voting,
+      cardValues: [0, 1, 2, 3, 5, 8, 13, 20, 40, 100, '?'], // todo: at some point make these customizable
       players: {}
     }));
   }

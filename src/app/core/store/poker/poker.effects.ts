@@ -182,4 +182,26 @@ export class PokerEffects {
         .map(res => new pokerActions.VoteSuccess())
         .catch(err => Observable.of(new pokerActions.VoteFail(err.message)));
     });
+
+  /**
+   * Clear all votes in database.
+   */
+  @Effect() clearVotes$ = this.actions$
+    .ofType(pokerActions.CLEAR_VOTES)
+    .map((action: pokerActions.ClearVotes) => action)
+    .withLatestFrom(this.store)
+    .switchMap(([action, state]) => {
+      const playersRef = this.afd.database.ref(`/poker-rooms/${state.poker.room.id}/players`);
+      // iterate over all players and build a set of updates to perform
+      return Observable.fromPromise(playersRef.once('value', snapshot => {
+        const updates: any = {};
+        snapshot.forEach(player => {
+          updates[`${player.key}/vote`] = null;
+          return false; // false means keep iterating, we want to go through all players
+        });
+        return playersRef.update(updates); // send updates to firebase
+      }))
+      .map(res => new pokerActions.ClearVotesSuccess())
+      .catch(err => Observable.of(new pokerActions.ClearVotesFail(err.message)));
+    });
 }

@@ -1,5 +1,4 @@
 export enum PokerRoomState {
-  Pending = 1,
-  Voting = 2,
-  Results = 3
+  Voting = 1,
+  Results = 2
 }
