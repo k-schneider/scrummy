@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { EffectsModule } from '@ngrx/effects';
 
 import { PokerEffects } from '../core/store/poker';
+import { SharedModule } from '../shared';
 
 import {
   RoomPageComponent,
@@ -13,23 +13,28 @@ import {
 
 import {
   JoinRoomComponent,
-  MakeRoomComponent
+  MakeRoomComponent,
+  PokerCardComponent,
+  PokerRoomComponent
 } from './components';
 
 import { PokerRoutingModule } from './poker-routing.module';
 
 const components = [
+  // containers
   RoomPageComponent,
   SelectRoomPageComponent,
-
+  // components
   JoinRoomComponent,
-  MakeRoomComponent
+  MakeRoomComponent,
+  PokerCardComponent,
+  PokerRoomComponent
 ];
 
 @NgModule({
   imports: [
-    CommonModule,
     FormsModule,
+    SharedModule,
     EffectsModule.forFeature([PokerEffects]),
     PokerRoutingModule
   ],

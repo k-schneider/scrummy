@@ -1,10 +1,10 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { EffectsModule } from '@ngrx/effects';
 
 import { AuthEffects } from '../core/store/auth';
+import { SharedModule } from '../shared';
 import { AuthGuard } from './auth.guard';
 
 import {
@@ -21,11 +21,21 @@ const providers = [
 
 @NgModule({
   imports: [
-    CommonModule,
     FormsModule,
+    SharedModule,
     EffectsModule.forFeature([AuthEffects])
   ],
-  declarations: [...components],
-  providers: [...providers]
+  declarations: [...components]
 })
-export class AuthModule { }
+export class AuthModule {
+
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: AuthModule,
+      providers: [
+        ...providers
+      ]
+    };
+  }
+
+}

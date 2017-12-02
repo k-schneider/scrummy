@@ -15,12 +15,14 @@ import { metaReducers, reducers } from './core/store';
 import { CustomRouterStateSerializer, RouterEffects } from './core/store/router';
 import { AuthModule } from './auth';
 import { LayoutsModule, MainComponent } from './layouts';
+import { SharedModule } from './shared';
 import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [],
   imports: [
     BrowserModule,
+    SharedModule.forRoot(),
     AppRoutingModule,
     StoreModule.forRoot(reducers, { metaReducers }),
     StoreDevtoolsModule.instrument({
@@ -31,7 +33,7 @@ import { AppRoutingModule } from './app-routing.module';
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
     AngularFireDatabaseModule,
-    AuthModule,
+    AuthModule.forRoot(),
     LayoutsModule
   ],
   providers: [

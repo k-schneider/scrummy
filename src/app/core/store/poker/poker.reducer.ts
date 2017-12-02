@@ -88,4 +88,5 @@ export const getPokerState = createFeatureSelector<State>('poker');
 
 export const getConnectionRef = createSelector(getPokerState, state => state.connectionRef);
 export const getPokerRoom = createSelector(getPokerState, state => state.room);
+export const getJoining = createSelector(getPokerState, state => state.joining);
 export const getJoinError = createSelector(getPokerState, state => state.joinError);

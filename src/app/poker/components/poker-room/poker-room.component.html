@@ -1,0 +1,26 @@
+<div fxLayout="row" fxLayout.xs="column" *ngIf="room$ | async; let room">
+
+  <div fxFlex="67" fxFlex.lt-lg="50">
+
+    <h1>Room: {{ room.name }}</h1>
+
+    <scr-poker-card
+      *ngFor="let cardValue of cardValues"
+      [value]="cardValue"
+      (select)="onVote($event)">
+    </scr-poker-card>
+
+  </div>
+
+  <div fxFlex="33" fxFlex.lt-lg="50">
+    <!-- player list and controls go here -->
+    <h2>Players</h2>
+    <p *ngFor="let player of room.players | scrKeys:false">{{player.name}} - {{player.vote}}</p>
+
+    <!-- invite details here -->
+    <h3>Invite Details</h3>
+    <p>Room Id: {{room.id}}</p>
+
+  </div>
+
+</div>

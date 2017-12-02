@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
+import { SharedModule } from '../shared';
+
 import {
   MainComponent,
   NotFoundPageComponent
@@ -12,7 +14,10 @@ export const components = [
 ];
 
 @NgModule({
-  imports: [RouterModule],
+  imports: [
+    RouterModule,
+    SharedModule
+  ],
   exports: [...components],
   declarations: [...components],
   providers: [],

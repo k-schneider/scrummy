@@ -1,7 +1,20 @@
-This is a room to play poker!
-<br>
-<button type="button" (click)="onVote()">Vote 666</button>
-<button type="button" routerLink="/poker/select-room">Leave</button>
+<!-- todo: user avatar here with option to change name -->
 
-<br><br>
-<pre>{{ foo | async | json }}</pre>
+<div *ngIf="joining$ | async; then joining else joined"></div>
+
+<ng-template #joining>
+  Joining the room, please wait...
+</ng-template>
+
+<ng-template #joined>
+  <ng-container *ngIf="joinError$ | async; then error else room"></ng-container>
+</ng-template>
+
+<ng-template #error>
+  Error... {{joinError$ | async}}<br>
+  <a routerLink="../../">Join a different room</a>
+</ng-template>
+
+<ng-template #room>
+  <scr-poker-room></scr-poker-room>
+</ng-template>
