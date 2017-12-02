@@ -2,6 +2,7 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import { PokerRoom } from '../../models';
 import * as pokerActions from './poker.actions';
+import * as fromAuth from '../auth';
 
 export interface State {
   room: PokerRoom;
@@ -132,3 +133,4 @@ export const getConnectionRef = createSelector(getPokerState, state => state.con
 export const getPokerRoom = createSelector(getPokerState, state => state.room);
 export const getJoining = createSelector(getPokerState, state => state.joining);
 export const getJoinError = createSelector(getPokerState, state => state.joinError);
+export const getIsModerator = createSelector(fromAuth.getUser, getPokerRoom, (user, room) => room.moderator === user.uid);

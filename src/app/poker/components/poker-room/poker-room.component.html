@@ -19,14 +19,16 @@
     <p *ngFor="let player of room.players | scrKeys:false">{{player.name}} - {{player.vote}}</p>
 
     <!-- todo: should only be available to moderator of room -->
-    <div *ngIf="room.state === statesEnum.Voting">
-      <button type="button" (click)="onClearVotes()">Clear Votes</button>
-      <button type="button" (click)="onFlipCards()">Flip Cards</button>
-    </div>
+    <ng-container *ngIf="isModerator$ | async">
+      <div *ngIf="room.state === statesEnum.Voting">
+        <button type="button" (click)="onClearVotes()">Clear Votes</button>
+        <button type="button" (click)="onFlipCards()">Flip Cards</button>
+      </div>
 
-    <div *ngIf="room.state === statesEnum.Results">
-      <button type="button" (click)="onResetRoom()">Reset</button>
-    </div>
+      <div *ngIf="room.state === statesEnum.Results">
+        <button type="button" (click)="onResetRoom()">Reset</button>
+      </div>
+    </ng-container>
 
     <!-- invite details here -->
     <h3>Invite Details</h3>

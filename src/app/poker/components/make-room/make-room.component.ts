@@ -1,8 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import 'rxjs/add/operator/take';
+
 import { Store } from '@ngrx/store';
 
 import { PokerRoomState } from '../../../core/enums';
 import { State } from '../../../core/store';
+import * as fromAuth from '../../../core/store/auth';
 import * as fromPoker from '../../../core/store/poker';
 
 @Component({
@@ -23,11 +26,14 @@ export class MakeRoomComponent implements OnInit {
       return;
     }
 
-    this.store.dispatch(new fromPoker.CreateRoom({
-      name: this.roomName,
-      state: PokerRoomState.Voting,
-      cardValues: [0, 1, 2, 3, 5, 8, 13, 20, 40, 100, '?'], // todo: at some point make these customizable
-      players: {}
-    }));
+    this.store.select(fromAuth.getUser).take(1).subscribe(user => {
+      this.store.dispatch(new fromPoker.CreateRoom({
+        moderator: user.uid,
+        name: this.roomName,
+        state: PokerRoomState.Voting,
+        cardValues: [0, 1, 2, 3, 5, 8, 13, 20, 40, 100, '?'], // todo: at some point make these customizable
+        players: {}
+      }));
+    });
   }
 }

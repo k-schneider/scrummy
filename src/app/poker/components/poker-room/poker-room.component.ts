@@ -14,12 +14,14 @@ import * as fromPoker from '../../../core/store/poker';
   templateUrl: './poker-room.component.html'
 })
 export class PokerRoomComponent implements OnInit {
+  isModerator$: Observable<boolean>;
   room$: Observable<PokerRoom>;
   statesEnum = PokerRoomState;
 
   constructor(private store: Store<State>) { }
 
   ngOnInit() {
+    this.isModerator$ = this.store.select(fromPoker.getIsModerator);
     this.room$ = this.store.select(fromPoker.getPokerRoom);
   }
 
