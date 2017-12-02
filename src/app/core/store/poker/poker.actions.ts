@@ -14,6 +14,9 @@ export const JOIN_ROOM            = '[Poker] Join Room';
 export const JOIN_ROOM_SUCCESS    = '[Poker] Join Room Success';
 export const JOIN_ROOM_FAIL       = '[Poker] Join Room Fail';
 
+export const ROOM_CONNECTED       = '[Poker] Room Connected';
+export const ROOM_MODIFIED        = '[Poker] Room Modified';
+
 export const VOTE                 = '[Poker] Vote';
 export const VOTE_SUCCESS         = '[Poker] Vote Success';
 export const VOTE_FAIL            = '[Poker] Vote Fail';
@@ -22,15 +25,16 @@ export const CLEAR_VOTES          = '[Poker] Clear Votes';
 export const CLEAR_VOTES_SUCCESS  = '[Poker] Clear Votes Success';
 export const CLEAR_VOTES_FAIL     = '[Poker] Clear Votes Fail';
 
-export const FLIP_CARDS           = '[Poker] Clear Votes';
+export const FLIP_CARDS           = '[Poker] Flip Cards';
 export const FLIP_CARDS_SUCCESS   = '[Poker] Flip Cards Success';
 export const FLIP_CARDS_FAIL      = '[Poker] Flip Cards Fail';
 
+export const RESET_ROOM           = '[Poker] Reset Room';
+export const RESET_ROOM_SUCCESS   = '[Poker] Reset Room Success';
+export const RESET_ROOM_FAIL      = '[Poker] Reset Room Fail';
+
 export const LEAVE_ROOM           = '[Poker] Leave Room';
 export const LEAVE_ROOM_SUCCESS   = '[Poker] Leave Room Success';
-
-export const ROOM_CONNECTED       = '[Poker] Room Connected';
-export const ROOM_MODIFIED        = '[Poker] Room Modified';
 
 /**
  * Every action is comprised of at least a type and an optional
@@ -87,16 +91,6 @@ export class RoomModified implements Action {
   constructor(public pokerRoom: PokerRoom) {}
 }
 
-// -- Leave a room
-
-export class LeaveRoom implements Action {
-  readonly type = LEAVE_ROOM;
-}
-
-export class LeaveRoomSuccess implements Action {
-  readonly type = LEAVE_ROOM_SUCCESS;
-}
-
 // -- Cast your vote
 
 export class Vote implements Action {
@@ -128,6 +122,46 @@ export class ClearVotesFail implements Action {
   constructor(public error?: any) { }
 }
 
+// Flip cards
+
+export class FlipCards implements Action {
+  readonly type = FLIP_CARDS;
+}
+
+export class FlipCardsSuccess implements Action {
+  readonly type = FLIP_CARDS_SUCCESS;
+}
+
+export class FlipCardsFail implements Action {
+  readonly type = FLIP_CARDS_FAIL;
+  constructor(public error?: any) { }
+}
+
+// Reset room
+
+export class ResetRoom implements Action {
+  readonly type = RESET_ROOM;
+}
+
+export class ResetRoomSuccess implements Action {
+  readonly type = RESET_ROOM_SUCCESS;
+}
+
+export class ResetRoomFail implements Action {
+  readonly type = RESET_ROOM_FAIL;
+  constructor(public error?: any) { }
+}
+
+// -- Leave a room
+
+export class LeaveRoom implements Action {
+  readonly type = LEAVE_ROOM;
+}
+
+export class LeaveRoomSuccess implements Action {
+  readonly type = LEAVE_ROOM_SUCCESS;
+}
+
 /**
  * Export a type alias of all actions in this action group
  * so that reducers can easily compose action types
@@ -141,11 +175,17 @@ export type PokerActions
             | JoinRoomFail
             | RoomConnected
             | RoomModified
-            | LeaveRoom
-            | LeaveRoomSuccess
             | Vote
             | VoteSuccess
             | VoteFail
             | ClearVotes
             | ClearVotesSuccess
-            | ClearVotesFail;
+            | ClearVotesFail
+            | FlipCards
+            | FlipCardsSuccess
+            | FlipCardsFail
+            | ResetRoom
+            | ResetRoomSuccess
+            | ResetRoomFail
+            | LeaveRoom
+            | LeaveRoomSuccess;

@@ -11,6 +11,12 @@ export interface State {
   joinError?: string;
   voting?: boolean;
   voteError?: string;
+  clearing?: boolean;
+  clearError?: string;
+  flipping?: boolean;
+  flipError?: string;
+  resetting?: boolean;
+  resetError?: string;
   connectionRef?: any;
 }
 
@@ -53,10 +59,6 @@ export function reducer(state = initialState, action: pokerActions.PokerActions)
       return Object.assign({}, state, { ...action.payload, joining: false });
     }
 
-    case pokerActions.LEAVE_ROOM_SUCCESS: {
-      return Object.assign({}, state, { room: null });
-    }
-
     case pokerActions.VOTE: {
       return Object.assign({}, state, { voting: true, voteError: null });
     }
@@ -67,6 +69,46 @@ export function reducer(state = initialState, action: pokerActions.PokerActions)
 
     case pokerActions.VOTE_FAIL: {
       return Object.assign({}, state, { voteError: action.error, voting: false });
+    }
+
+    case pokerActions.CLEAR_VOTES: {
+      return Object.assign({}, state, { clearing: true, clearError: null });
+    }
+
+    case pokerActions.CLEAR_VOTES_SUCCESS: {
+      return Object.assign({}, state, { clearing: false, clearError: null });
+    }
+
+    case pokerActions.CLEAR_VOTES_FAIL: {
+      return Object.assign({}, state, { clearError: action.error, clearing: false });
+    }
+
+    case pokerActions.FLIP_CARDS: {
+      return Object.assign({}, state, { flipping: true, flipError: null });
+    }
+
+    case pokerActions.FLIP_CARDS_SUCCESS: {
+      return Object.assign({}, state, { flipping: false, flipError: null });
+    }
+
+    case pokerActions.FLIP_CARDS_FAIL: {
+      return Object.assign({}, state, { flipError: action.error, flipping: false });
+    }
+
+    case pokerActions.RESET_ROOM: {
+      return Object.assign({}, state, { resetting: true, resetError: null });
+    }
+
+    case pokerActions.RESET_ROOM_SUCCESS: {
+      return Object.assign({}, state, { resetting: false, resetError: null });
+    }
+
+    case pokerActions.RESET_ROOM_FAIL: {
+      return Object.assign({}, state, { resetError: action.error, resetting: false });
+    }
+
+    case pokerActions.LEAVE_ROOM_SUCCESS: {
+      return Object.assign({}, state, { room: null });
     }
 
     default: {

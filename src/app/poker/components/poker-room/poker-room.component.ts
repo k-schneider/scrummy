@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { Store } from '@ngrx/store';
 
+import { PokerRoomState } from '../../../core/enums';
 import { PokerRoom } from '../../../core/models';
 import { State } from '../../../core/store';
 import * as fromPoker from '../../../core/store/poker';
@@ -14,6 +15,7 @@ import * as fromPoker from '../../../core/store/poker';
 })
 export class PokerRoomComponent implements OnInit {
   room$: Observable<PokerRoom>;
+  statesEnum = PokerRoomState;
 
   constructor(private store: Store<State>) { }
 
@@ -26,7 +28,11 @@ export class PokerRoomComponent implements OnInit {
   }
 
   onFlipCards() {
-    alert('todo');
+    this.store.dispatch(new fromPoker.FlipCards());
+  }
+
+  onResetRoom() {
+    this.store.dispatch(new fromPoker.ResetRoom());
   }
 
   onVote(value: number | string) {

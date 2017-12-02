@@ -3,6 +3,7 @@
   <div fxFlex="67" fxFlex.lt-lg="50">
 
     <h1>Room: {{ room.name }}</h1>
+    <p>State: {{ room.state }}</p>
 
     <scr-poker-card
       *ngFor="let cardValue of room.cardValues"
@@ -18,8 +19,14 @@
     <p *ngFor="let player of room.players | scrKeys:false">{{player.name}} - {{player.vote}}</p>
 
     <!-- todo: should only be available to moderator of room -->
-    <button type="button" (click)="onClearVotes()">Clear Votes</button>
-    <button type="button" (click)="onFlipCards()">Flip Cards</button>
+    <div *ngIf="room.state === statesEnum.Voting">
+      <button type="button" (click)="onClearVotes()">Clear Votes</button>
+      <button type="button" (click)="onFlipCards()">Flip Cards</button>
+    </div>
+
+    <div *ngIf="room.state === statesEnum.Results">
+      <button type="button" (click)="onResetRoom()">Reset</button>
+    </div>
 
     <!-- invite details here -->
     <h3>Invite Details</h3>

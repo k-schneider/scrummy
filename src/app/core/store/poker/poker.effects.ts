@@ -13,6 +13,7 @@ import { Action, Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { AngularFireDatabase } from 'angularfire2/database';
 
+import { PokerRoomState } from '../../enums';
 import { PokerPlayer, PokerRoom } from '../../models';
 import { getUser } from '../auth';
 import * as routerActions from '../router/router.actions';
@@ -41,6 +42,7 @@ export class PokerEffects {
         .map(res => new pokerActions.CreateRoomSuccess(res.key))
         .catch(err => Observable.of(new pokerActions.CreateRoomFail(err.message)));
     });
+
 
   /**
    * When a room has been successfully created then automatically navigate to it.
@@ -143,32 +145,6 @@ export class PokerEffects {
     });
 
 
-
-  /**
-   * Upon leaving we need to remove the player from the room and disconnect presence.
-   */
-  @Effect() leave$: Observable<Action> = this.actions$
-    .ofType(pokerActions.LEAVE_ROOM)
-    .withLatestFrom(this.store)
-    .switchMap(([action, state]) => {
-      const roomPath = `/poker-rooms/${state.poker.room.id}`;
-      const playerPath = `${roomPath}/players/${state.auth.user.uid}`;
-      const playerRef = this.afd.database.ref(playerPath);
-
-      // remove the player and cancel any disconnect events
-      return Observable.zip(
-        Observable.of(state),
-        Observable.fromPromise(playerRef.remove()),
-        Observable.fromPromise(playerRef.onDisconnect().cancel()),
-      );
-    })
-    .map(data => data[0])
-    .map(state => {
-      // stop monitoring connection for this room
-      this.afd.database.ref('.info/connected').off('value', state.poker.connectionRef);
-      return new pokerActions.LeaveRoomSuccess();
-    });
-
   /**
    * Update the players vote in database.
    */
@@ -183,6 +159,7 @@ export class PokerEffects {
         .catch(err => Observable.of(new pokerActions.VoteFail(err.message)));
     });
 
+
   /**
    * Clear all votes in database.
    */
@@ -191,17 +168,78 @@ export class PokerEffects {
     .map((action: pokerActions.ClearVotes) => action)
     .withLatestFrom(this.store)
     .switchMap(([action, state]) => {
-      const playersRef = this.afd.database.ref(`/poker-rooms/${state.poker.room.id}/players`);
-      // iterate over all players and build a set of updates to perform
-      return Observable.fromPromise(playersRef.once('value', snapshot => {
-        const updates: any = {};
-        snapshot.forEach(player => {
-          updates[`${player.key}/vote`] = null;
-          return false; // false means keep iterating, we want to go through all players
-        });
-        return playersRef.update(updates); // send updates to firebase
-      }))
-      .map(res => new pokerActions.ClearVotesSuccess())
-      .catch(err => Observable.of(new pokerActions.ClearVotesFail(err.message)));
+      return this.clearVotes(state.poker.room.id)
+        .map(res => new pokerActions.ClearVotesSuccess())
+        .catch(err => Observable.of(new pokerActions.ClearVotesFail(err.message)));
     });
+
+  /**
+   * Clear all votes in database.
+   */
+  @Effect() flipCards$ = this.actions$
+    .ofType(pokerActions.FLIP_CARDS)
+    .map((action: pokerActions.FlipCards) => action)
+    .withLatestFrom(this.store)
+    .switchMap(([action, state]) => {
+      const roomRef = this.afd.object<PokerRoom>(`/poker-rooms/${state.poker.room.id}`);
+      return Observable.fromPromise(roomRef.update({ state: PokerRoomState.Results }))
+        .map(res => new pokerActions.FlipCardsSuccess())
+        .catch(err => Observable.of(new pokerActions.FlipCardsFail(err.message)));
+    });
+
+  /**
+   * Reset room back to initial state in database.
+   */
+  @Effect() resetRoom$ = this.actions$
+    .ofType(pokerActions.RESET_ROOM)
+    .map((action: pokerActions.ResetRoom) => action)
+    .withLatestFrom(this.store)
+    .switchMap(([action, state]) => {
+      const roomRef = this.afd.object<PokerRoom>(`/poker-rooms/${state.poker.room.id}`);
+      return this.clearVotes(state.poker.room.id)
+        .switchMap(() => Observable.fromPromise(roomRef.update({ state: PokerRoomState.Voting })))
+        .map(() => new pokerActions.ResetRoomSuccess())
+        .catch(err => Observable.of(new pokerActions.ResetRoomFail(err.message)));
+    });
+
+  /**
+   * Upon leaving we need to remove the player from the room and disconnect presence.
+   */
+  @Effect() leave$: Observable<Action> = this.actions$
+  .ofType(pokerActions.LEAVE_ROOM)
+  .withLatestFrom(this.store)
+  .switchMap(([action, state]) => {
+    const roomPath = `/poker-rooms/${state.poker.room.id}`;
+    const playerPath = `${roomPath}/players/${state.auth.user.uid}`;
+    const playerRef = this.afd.database.ref(playerPath);
+
+    // remove the player and cancel any disconnect events
+    return Observable.zip(
+      Observable.of(state),
+      Observable.fromPromise(playerRef.remove()),
+      Observable.fromPromise(playerRef.onDisconnect().cancel()),
+    );
+  })
+  .map(data => data[0])
+  .map(state => {
+    // stop monitoring connection for this room
+    this.afd.database.ref('.info/connected').off('value', state.poker.connectionRef);
+    return new pokerActions.LeaveRoomSuccess();
+  });
+
+  /**
+   * Clears all votes for the specified room
+   */
+  private clearVotes(roomId): Observable<any> {
+    const playersRef = this.afd.database.ref(`/poker-rooms/${roomId}/players`);
+    // iterate over all players and build a set of updates to perform
+    return Observable.fromPromise(playersRef.once('value', snapshot => {
+      const updates: any = {};
+      snapshot.forEach(player => {
+        updates[`${player.key}/vote`] = null;
+        return false; // false means keep iterating, we want to go through all players
+      });
+      return playersRef.update(updates); // send updates to firebase
+    }));
+  }
 }
