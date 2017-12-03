@@ -9,26 +9,32 @@ import { State } from '../../../core/store';
 import * as fromPoker from '../../../core/store/poker';
 
 @Component({
-  selector: 'scr-poker-room',
+  selector: 'scr-moderator',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './poker-room.component.html'
+  templateUrl: './moderator.component.html'
 })
-export class PokerRoomComponent implements OnInit {
-  isModerator$: Observable<boolean>;
+export class ModeratorComponent implements OnInit {
+  allPlayersVoted$: Observable<boolean>;
   room$: Observable<PokerRoom>;
   statesEnum = PokerRoomState;
-  vote$: Observable<string | number>;
 
   constructor(private store: Store<State>) { }
 
   ngOnInit() {
-    this.isModerator$ = this.store.select(fromPoker.getIsModerator);
+    this.allPlayersVoted$ = this.store.select(fromPoker.getAllPlayersVoted);
     this.room$ = this.store.select(fromPoker.getPokerRoom);
-    this.vote$ = this.store.select(fromPoker.getVote);
   }
 
-  onVote(value: number | string) {
-    this.store.dispatch(new fromPoker.Vote(value));
+  onClearVotes() {
+    this.store.dispatch(new fromPoker.ClearVotes());
+  }
+
+  onFlipCards() {
+    this.store.dispatch(new fromPoker.FlipCards());
+  }
+
+  onResetRoom() {
+    this.store.dispatch(new fromPoker.ResetRoom());
   }
 
 }

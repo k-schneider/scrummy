@@ -14,9 +14,17 @@ import {
 import {
   JoinRoomComponent,
   MakeRoomComponent,
+  ModeratorComponent,
+  PlayerListComponent,
   PokerCardComponent,
-  PokerRoomComponent
+  PokerRoomComponent,
+  RoomInviteComponent,
+  VoteResultsComponent
 } from './components';
+
+import {
+  PokerRoomStatePipe
+} from './pipes';
 
 import { PokerRoutingModule } from './poker-routing.module';
 
@@ -27,8 +35,16 @@ const components = [
   // components
   JoinRoomComponent,
   MakeRoomComponent,
+  ModeratorComponent,
+  PlayerListComponent,
   PokerCardComponent,
-  PokerRoomComponent
+  PokerRoomComponent,
+  RoomInviteComponent,
+  VoteResultsComponent
+];
+
+const pipes = [
+  PokerRoomStatePipe
 ];
 
 @NgModule({
@@ -38,7 +54,7 @@ const components = [
     EffectsModule.forFeature([PokerEffects]),
     PokerRoutingModule
   ],
-  declarations: [...components],
+  declarations: [...components, ...pipes],
   providers: []
 })
 export class PokerModule { }

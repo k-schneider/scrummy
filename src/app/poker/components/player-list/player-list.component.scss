@@ -1,0 +1,16 @@
+.fa-user {
+  color: red;
+  margin-right: 0.5rem;
+
+  &.has-voted {
+    color: green;
+  }
+}
+
+.player-list {
+  font-size: 1.25rem;
+}
+
+.player-item:not(:last-child) {
+  margin-bottom: 0.5rem;
+}

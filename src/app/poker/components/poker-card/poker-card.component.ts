@@ -8,9 +8,18 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output
 })
 export class PokerCardComponent implements OnInit {
   @Input() value: number | string;
+  @Input() selected = false;
   @Output() select = new EventEmitter<number | string>();
 
   constructor() { }
 
   ngOnInit() { }
+
+  onCardClick() {
+    if (this.selected) {
+      this.select.emit(null);
+    } else {
+      this.select.emit(this.value);
+    }
+  }
 }

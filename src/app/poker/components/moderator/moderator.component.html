@@ -1,0 +1,9 @@
+<div *ngIf="room$ | async; let room" class="actions" fxLayout="column" fxLayoutGap="1rem">
+  <ng-container *ngIf="room.state === statesEnum.Voting">
+    <button type="button" class="btn btn-primary" (click)="onClearVotes()">Clear Votes</button>
+    <button type="button" class="btn btn-primary" [class.anim-shake]="allPlayersVoted$ | async" (click)="onFlipCards()">Flip Cards</button>
+  </ng-container>
+  <ng-container *ngIf="room.state === statesEnum.Results">
+    <button type="button" class="btn btn-primary" (click)="onResetRoom()">Reset</button>
+  </ng-container>
+</div>

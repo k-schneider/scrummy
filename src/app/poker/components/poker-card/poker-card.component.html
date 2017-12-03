@@ -1,1 +1,5 @@
-<div class="poker-card" (click)="select.emit(value)">{{value}}</div>
+<button type="button" class="poker-card box-shadow-1" [class.selected]="selected" (click)="onCardClick()">
+  <div class="top-left">{{value}}</div>
+  <div class="center">{{value}}</div>
+  <div class="bottom-right">{{value}}</div>
+</button>

@@ -36,7 +36,6 @@ export class MakeRoomComponent implements OnInit {
         name: this.roomName,
         state: PokerRoomState.Voting,
         cardValues: [0, 1, 2, 3, 5, 8, 13, 20, 40, 100, '?'], // todo: at some point make these customizable
-        players: {}
       }));
     });
   }

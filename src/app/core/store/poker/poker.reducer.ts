@@ -134,4 +134,32 @@ export const getConnectionRef = createSelector(getPokerState, state => state.con
 export const getPokerRoom = createSelector(getPokerState, state => state.room);
 export const getJoining = createSelector(getPokerState, state => state.joining);
 export const getJoinError = createSelector(getPokerState, state => state.joinError);
-export const getIsModerator = createSelector(fromAuth.getUser, getPokerRoom, (user, room) => room.moderator === user.uid);
+
+export const getIsModerator = createSelector(fromAuth.getUser, getPokerRoom, (user, room) => {
+  if (room) {
+    return room.moderator === user.uid;
+  }
+  return false;
+});
+
+export const getVote = createSelector(fromAuth.getUser, getPokerRoom, (user, room) => {
+  if (room && room.players && room.players[user.uid]) {
+    return room.players[user.uid].vote;
+  }
+  return null;
+});
+export const getAllPlayersVoted = createSelector(getPokerRoom, room => {
+  let result = true;
+
+  // iterate each player and check for a vote value
+  for (const playerId in room.players) {
+    if (room.players.hasOwnProperty(playerId)) {
+      const vote = room.players[playerId].vote;
+      if (vote === null || vote === undefined) {
+        result = false;
+      }
+    }
+  }
+
+  return result;
+});

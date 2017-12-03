@@ -1,0 +1,13 @@
+<div class="card box-shadow-1">
+  <div class="card-header">
+    <div class="title">Players</div>
+  </div>
+  <div class="card-body">
+    <ul class="player-list unstyled">
+      <li class="player-item" *ngFor="let player of room.players | keys:false">
+        <i class="fa fa-user" [class.has-voted]="isNotNil(player.vote)" aria-hidden="true"></i>
+        <span>{{player.name}}</span>
+      </li>
+    </ul>
+  </div>
+</div>

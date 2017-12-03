@@ -7,7 +7,7 @@ export interface PokerRoom {
   name: string;
   state: PokerRoomState;
   cardValues: (string | number)[];
-  players: {
+  players?: {
     [key: string]: PokerPlayer
   };
 }
