@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 
+import { PokerRoomState } from '../../../core/enums';
 import { PokerRoom } from '../../../core/models';
+import { isNil } from '../../../core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -10,12 +12,13 @@ import { PokerRoom } from '../../../core/models';
 })
 export class PlayerListComponent implements OnInit {
   @Input() room: PokerRoom;
+  isNil = isNil;
 
   constructor() { }
 
   ngOnInit() { }
 
-  isNotNil(v) {
-    return v !== undefined && v !== null;
+  get showVotes() {
+    return this.room.state === PokerRoomState.Results;
   }
 }

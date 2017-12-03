@@ -1,5 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
+import { isNil } from '../../utils';
 import { PokerRoom } from '../../models';
 import * as pokerActions from './poker.actions';
 import * as fromAuth from '../auth';
@@ -155,7 +156,7 @@ export const getAllPlayersVoted = createSelector(getPokerRoom, room => {
   for (const playerId in room.players) {
     if (room.players.hasOwnProperty(playerId)) {
       const vote = room.players[playerId].vote;
-      if (vote === null || vote === undefined) {
+      if (isNil(vote)) {
         result = false;
       }
     }

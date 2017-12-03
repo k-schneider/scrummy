@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { EffectsModule } from '@ngrx/effects';
 
 import { PokerEffects } from '../core/store/poker';
@@ -50,6 +51,7 @@ const pipes = [
 @NgModule({
   imports: [
     FormsModule,
+    NgxChartsModule,
     SharedModule,
     EffectsModule.forFeature([PokerEffects]),
     PokerRoutingModule
