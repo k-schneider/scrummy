@@ -8,9 +8,16 @@ import {
   NotFoundPageComponent
 } from './containers';
 
+import {
+  NavbarComponent
+} from './components';
+
 export const components = [
+  // containers
   MainComponent,
-  NotFoundPageComponent
+  NotFoundPageComponent,
+  // components
+  NavbarComponent
 ];
 
 @NgModule({

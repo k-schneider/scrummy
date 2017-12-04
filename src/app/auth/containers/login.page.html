@@ -1,11 +1,10 @@
-<div class="login-page">
-
-  <!-- todo: show load indicator -->
-
-  <div class="login card card-body box-shadow-1" *ngIf="!(loading$ | async)">
-    <label for="name">Hi, what is your name?</label>
-    <input id="name" class="input" placeholder="George R.R. Martin" [(ngModel)]="name">
-    <button type="button" class="btn btn-primary btn-block" (click)="onContinue()" [disabled]="loading$ | async">Continue</button>
-  </div>
-
+<div class="login card box-shadow-1" *ngIf="!(loading$ | async)">
+    <div class="card-header">
+      <span class="title">Player</span>
+    </div>
+    <div class="card-body">
+      <label for="name">Hi, what is your name?</label>
+      <input id="name" class="input" placeholder="George R.R. Martin" [(ngModel)]="name">
+      <button type="button" class="btn btn-primary btn-block" (click)="onContinue()" [disabled]="loading$ | async">Continue</button>
+    </div>
 </div>

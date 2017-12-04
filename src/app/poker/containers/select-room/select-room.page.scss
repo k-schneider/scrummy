@@ -1,19 +1,14 @@
 :host {
-  display: block;
-  height: 100%;
-}
-
-.select-room-page {
-  position: relative;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: min-content
 }
 
 .options {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  min-width: 360px;
+  max-width: 360px;
 
   .or {
     color: #666;

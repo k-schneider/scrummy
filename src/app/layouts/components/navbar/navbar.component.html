@@ -1,0 +1,16 @@
+<div class="navbar clearfix">
+
+  <div class="left">
+    <a routerLink="/" class="title">Scrummy</a>
+  </div>
+
+  <div class="right">
+    <ng-container *ngIf="user$ | async as user">
+      <button type="button" routerLink="/login" class="user" *ngIf="user.displayName">
+        <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+        <span class="sr-only">User</span>
+      </button>
+    </ng-container>
+  </div>
+
+</div>
