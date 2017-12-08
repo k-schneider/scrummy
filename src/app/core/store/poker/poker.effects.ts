@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/observable/fromPromise';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/zip';
@@ -109,40 +110,47 @@ export class PokerEffects {
       const roomPath = `/poker-rooms/${action.pokerRoom.id}`;
       const playerPath = `${roomPath}/players/${state.auth.user.uid}`;
       const playerRef = this.afd.database.ref(playerPath);
+      const player: PokerPlayer = {
+        name: state.auth.user.displayName
+      };
+
+      let disconnectAdded = false;
 
       // Create a reference to the special '.info/connected' path in
       // Realtime Database. This path returns `true` when connected
       // and `false` when disconnected.
-      const connectionRef = this.afd.database.ref('.info/connected').on('value', snapshot => {
+      const onConnectedChanged = this.afd.database.ref('.info/connected').on('value', async connSnapshot => {
 
         // If we're not currently connected, don't do anything.
-        if (snapshot.val() === false) {
-            return;
+        if (connSnapshot.val() === false) {
+          return;
         }
 
         // If we are currently connected, then use the 'onDisconnect()'
         // method to register a remove which will only trigger once this
         // client has disconnected by closing the app,
         // losing internet, or any other means.
-        playerRef.onDisconnect().remove().then(() => {
-          // The promise returned from .onDisconnect().remove() will
-          // resolve as soon as the server acknowledges the onDisconnect()
-          // request, NOT once we've actually disconnected:
-          // https://firebase.google.com/docs/reference/js/firebase.database.OnDisconnect
+        await playerRef.onDisconnect().remove();
 
-          // We can now safely add the player knowing that the
-          // server will remove us once we lose connection.
-          const player: PokerPlayer = {
-            name: state.auth.user.displayName
-          };
-          playerRef.set(player);
-        });
+        // The promise returned from .onDisconnect().remove() will
+        // resolve as soon as the server acknowledges the onDisconnect()
+        // request, NOT once we've actually disconnected:
+        // https://firebase.google.com/docs/reference/js/firebase.database.OnDisconnect
+        await playerRef.set(Object.assign({}, player));
 
+        disconnectAdded = true;
       });
 
-      // store connectedSub in state so that off() can be called when leaving room
-      return new pokerActions.RoomConnected({ connectionRef });
-    });
+      // We can now safely add the player knowing that the
+      // server will remove us once we lose connection.
+      const onPlayerChanged = playerRef.on('value', playerSnapshot => {
+        // ensure a player is always present - this will prevent the same user in a different browser removing the player
+        if (disconnectAdded && playerSnapshot.val() === null) {
+          playerRef.set(Object.assign({}, player));
+        }
+      });
+      return { onConnectedChanged, onPlayerChanged };
+    }).map((res: any) => new pokerActions.RoomConnected(res));
 
 
   /**
@@ -174,7 +182,7 @@ export class PokerEffects {
     });
 
   /**
-   * Clear all votes in database.
+   * Transition the room state to 'Results'.
    */
   @Effect() flipCards$ = this.actions$
     .ofType(pokerActions.FLIP_CARDS)
@@ -212,19 +220,17 @@ export class PokerEffects {
     const roomPath = `/poker-rooms/${state.poker.room.id}`;
     const playerPath = `${roomPath}/players/${state.auth.user.uid}`;
     const playerRef = this.afd.database.ref(playerPath);
+    playerRef.off('value', state.poker.onPlayerChanged); // remove this so player isn't just added right back
 
     // remove the player and cancel any disconnect events
     return Observable.zip(
-      Observable.of(state),
       Observable.fromPromise(playerRef.remove()),
       Observable.fromPromise(playerRef.onDisconnect().cancel()),
-    );
-  })
-  .map(data => data[0])
-  .map(state => {
-    // stop monitoring connection for this room
-    this.afd.database.ref('.info/connected').off('value', state.poker.connectionRef);
-    return new pokerActions.LeaveRoomSuccess();
+    ).map(() => {
+      // stop monitoring connection for this room
+      this.afd.database.ref('.info/connected').off('value', state.poker.onConnectedChanged);
+      return new pokerActions.LeaveRoomSuccess();
+    });
   });
 
   /**
