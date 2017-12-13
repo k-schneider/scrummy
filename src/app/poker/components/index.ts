@@ -1,4 +1,6 @@
+export * from './join-error';
 export * from './join-room';
+export * from './joining-room';
 export * from './make-room';
 export * from './moderator';
 export * from './player-list';

@@ -10,7 +10,8 @@ import * as fromPoker from '../../../core/store/poker';
 @Component({
   selector: 'scr-room-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './room.page.html'
+  templateUrl: './room.page.html',
+  styleUrls: ['room.page.scss']
 })
 export class RoomPageComponent implements OnInit, OnDestroy {
   joinError$: Observable<string>;

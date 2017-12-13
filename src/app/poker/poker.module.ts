@@ -13,6 +13,8 @@ import {
 } from './containers';
 
 import {
+  JoinErrorComponent,
+  JoiningRoomComponent,
   JoinRoomComponent,
   MakeRoomComponent,
   ModeratorComponent,
@@ -34,6 +36,8 @@ const components = [
   RoomPageComponent,
   SelectRoomPageComponent,
   // components
+  JoinErrorComponent,
+  JoiningRoomComponent,
   JoinRoomComponent,
   MakeRoomComponent,
   ModeratorComponent,
