@@ -11,12 +11,24 @@
   color: #ccc;
 }
 
-.input.invalid {
-  border: solid 1px red;
-}
+.form-group {
 
-.control-error {
-  color: red;
-  display: inline-block;
-  margin-top: .5rem;
+  &.invalid {
+
+    .input {
+      border: solid 1px red;
+    }
+
+    label {
+      color: red;
+    }
+
+  }
+
+  .control-error {
+    color: red;
+    display: inline-block;
+    margin-top: .5rem;
+  }
+
 }

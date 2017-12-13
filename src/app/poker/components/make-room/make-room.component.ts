@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import 'rxjs/add/operator/take';
 
 import { Store } from '@ngrx/store';
@@ -12,31 +13,43 @@ import { Observable } from 'rxjs/Observable';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'scr-make-room',
-  templateUrl: './make-room.component.html',
-  styleUrls: ['./make-room.component.scss']
+  templateUrl: './make-room.component.html'
 })
 export class MakeRoomComponent implements OnInit {
   error$: Observable<string>;
-  roomName: string;
+  form: FormGroup;
+  hasSubmitted = false;
 
-  constructor(private store: Store<State>) { }
+  constructor(
+    private fb: FormBuilder,
+    private store: Store<State>
+  ) { }
 
   ngOnInit() {
+    this.createForm();
     this.error$ = this.store.select(fromPoker.getCreateError);
   }
 
   onMakeRoom() {
-    if (!this.roomName) {
+    this.hasSubmitted = true;
+    if (this.form.invalid) {
       return;
     }
 
+    const name = this.form.get('name').value;
     this.store.select(fromAuth.getUser).take(1).subscribe(user => {
       this.store.dispatch(new fromPoker.CreateRoom({
         moderator: user.uid,
-        name: this.roomName,
+        name: name,
         state: PokerRoomState.Voting,
         cardValues: [0, 1, 2, 3, 5, 8, 13, 20, 40, 100, '?'], // todo: at some point make these customizable
       }));
+    });
+  }
+
+  private createForm() {
+    this.form = this.fb.group({
+      name: ['', Validators.required]
     });
   }
 }

@@ -3,7 +3,9 @@
 <div *ngIf="joining$ | async; then joining else joined"></div>
 
 <ng-template #joining>
-  Joining the room, please wait...
+  <div class="p-3">
+    Joining the room, please wait...
+  </div>
 </ng-template>
 
 <ng-template #joined>
@@ -11,8 +13,10 @@
 </ng-template>
 
 <ng-template #error>
-  Error... {{joinError$ | async}}<br>
-  <a routerLink="../../">Join a different room</a>
+  <div class="p-3">
+    Error... {{joinError$ | async}}<br>
+    <a routerLink="../../">Join a different room</a>
+  </div>
 </ng-template>
 
 <ng-template #room>

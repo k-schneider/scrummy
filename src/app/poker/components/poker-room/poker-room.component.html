@@ -1,6 +1,6 @@
 <div fxLayout="row" fxLayout.lt-md="column" *ngIf="room$ | async; let room">
 
-  <div class="p-1" fxFlex="67" fxFlex.lt-lg="50">
+  <div class="p-3" fxFlex="67" fxFlex.lt-lg="50">
 
     <h1>Room: {{ room.name }}</h1>
     <p>Status: {{ room.state | pokerRoomState }}</p>
@@ -21,7 +21,7 @@
 
   </div>
 
-  <div class="p-1" fxFlex="33" fxFlex.lt-lg="50" fxLayout="column" fxLayoutGap="1rem">
+  <div class="p-3" fxFlex="33" fxFlex.lt-lg="50" fxLayout="column" fxLayoutGap="1rem">
     <scr-player-list [room]="room"></scr-player-list>
     <scr-room-invite [room]="room"></scr-room-invite>
     <scr-moderator *ngIf="isModerator$ | async"></scr-moderator>

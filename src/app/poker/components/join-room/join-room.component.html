@@ -1,4 +1,7 @@
-<label class="sr-only" for="roomId">Enter Room Name</label>
-<input id="roomId" class="input" placeholder="Enter Room ID" [(ngModel)]="roomId">
-
-<button type="button" class="btn btn-primary btn-block" (click)="onJoinRoom()">Join Room</button>
+<div [formGroup]="form">
+  <div class="form-group" [class.invalid]="(hasSubmitted || form.get('roomId').touched) && form.get('roomId').invalid">
+    <label class="sr-only" for="roomId">Enter Room Name</label>
+    <input id="roomId" class="input" placeholder="Enter Room ID" formControlName="roomId">
+  </div>
+  <button type="button" class="btn btn-primary btn-block mt-3" (click)="onJoinRoom()">Join Room</button>
+</div>

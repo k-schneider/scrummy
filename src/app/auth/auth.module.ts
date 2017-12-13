@@ -1,5 +1,5 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { EffectsModule } from '@ngrx/effects';
 
@@ -21,7 +21,7 @@ const providers = [
 
 @NgModule({
   imports: [
-    FormsModule,
+    ReactiveFormsModule,
     SharedModule,
     EffectsModule.forFeature([AuthEffects])
   ],

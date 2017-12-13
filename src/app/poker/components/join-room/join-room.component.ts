@@ -1,23 +1,38 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'scr-join-room',
-  templateUrl: './join-room.component.html',
-  styleUrls: ['./join-room.component.scss']
+  templateUrl: './join-room.component.html'
 })
 export class JoinRoomComponent implements OnInit {
-  roomId: string;
+  form: FormGroup;
+  hasSubmitted = false;
 
-  constructor(private router: Router) { }
+  constructor(
+    private fb: FormBuilder,
+    private router: Router
+  ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.createForm();
+  }
 
   onJoinRoom() {
-    if (!this.roomId) {
+    this.hasSubmitted = true;
+    if (this.form.invalid) {
       return;
     }
-    this.router.navigate(['/poker/room', this.roomId]);
+
+    const roomId = this.form.get('roomId').value;
+    this.router.navigate(['/poker/room', roomId]);
+  }
+
+  private createForm() {
+    this.form = this.fb.group({
+      roomId: ['', Validators.required]
+    });
   }
 }
