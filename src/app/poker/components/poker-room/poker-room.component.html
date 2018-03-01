@@ -5,7 +5,7 @@
     <h1>Room: {{ room.name }}</h1>
     <p>Status: {{ room.state | pokerRoomState }}</p>
 
-    <div fxLayout fxLayoutWrap fxLayoutGap="1rem" fxLayoutAlign="center stretch" *ngIf="room.state === statesEnum.Voting">
+    <div fxLayout="row wrap" fxLayoutGap="1rem" fxLayoutAlign="center stretch" *ngIf="room.state === statesEnum.Voting">
       <scr-poker-card
         *ngFor="let cardValue of room.cardValues"
         [value]="cardValue"
